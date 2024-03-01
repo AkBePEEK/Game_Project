@@ -155,11 +155,11 @@ try:
         ]
 
         #Sounds
-        bg_sound = main_screen.pygame.mixer.Sound("../sounds/greenfield-birds-suburban-sounds-in-the-background-16683.mp3")
+        bg_sound = main_screen.pygame.mixer.Sound("sounds/greenfield-birds-suburban-sounds-in-the-background-16683.mp3")
         bg_sound.play()
 
         #Enemy
-        monster = main_screen.pygame.image.load("../images/woodcutter/Woodcutter.png").convert_alpha()
+        monster = main_screen.pygame.image.load("images/woodcutter/Woodcutter.png").convert_alpha()
         monster_x = 584
         monster_y = 700
 
