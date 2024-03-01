@@ -133,7 +133,7 @@ def level_1():
     bg_x = 0
 
     player_anim_count = 0
-    player_speed = 6
+    player_speed = 10
     player_acceleration = 1.5
     player_x = 90
     player_y = 700
