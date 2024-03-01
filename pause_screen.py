@@ -36,3 +36,7 @@ def pause_screen(paused):
                     paused = False
 
         main_screen.pygame.display.update()
+
+
+if __name__ == '__main__':
+    pause_screen(True)

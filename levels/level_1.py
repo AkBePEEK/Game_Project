@@ -1,6 +1,4 @@
 import pygame
-from pause_screen import pause_screen
-from loose_screen import loose_screen
 
 pygame.init()
 
@@ -126,9 +124,67 @@ def level_1():
     #Sounds
 
     #Enemy
-    monster = pygame.image.load("images/2 Battle turtle/Battle_turtle (1).png").convert_alpha()
+    m_attack1 = [
+        pygame.image.load("images/1 Centipede/attack_1/Centipede_attack1.png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_1/Centipede_attack1 (1).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_1/Centipede_attack1 (2).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_1/Centipede_attack1 (3).png").convert_alpha(),
+    ]
+    m_attack2 = [
+        pygame.image.load("images/1 Centipede/attack_2/Centipede_attack2 (1).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_2/Centipede_attack2 (2).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_2/Centipede_attack2 (3).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_2/Centipede_attack2 (4).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_2/Centipede_attack2 (5).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_2/Centipede_attack2 (6).png").convert_alpha(),
+    ]
+    m_attack3 = [
+        pygame.image.load("images/1 Centipede/attack_3/Centipede_attack3.png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_3/Centipede_attack3 (1).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_3/Centipede_attack3 (2).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_3/Centipede_attack3 (4).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_3/Centipede_attack3 (5).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_3/Centipede_attack3 (6).png").convert_alpha(),
+    ]
+    m_attack4 = [
+        pygame.image.load("images/1 Centipede/attack_4/Centipede_attack4.png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_4/Centipede_attack4 (1).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_4/Centipede_attack4 (2).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/attack_4/Centipede_attack4 (3).png").convert_alpha(),
+    ]
+    m_death = [
+        pygame.image.load("images/1 Centipede/death/Centipede_death.png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/death/Centipede_death (1).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/death/Centipede_death (2).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/death/Centipede_death (3).png").convert_alpha(),
+    ]
+    m_hurt = [
+        pygame.image.load("images/1 Centipede/hurt/Centipede_hurt.png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/hurt/Centipede_hurt (1).png").convert_alpha(),
+    ]
+    m_idle = [
+        pygame.image.load("images/1 Centipede/idle/Centipede_idle.png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/idle/Centipede_idle (1).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/idle/Centipede_idle (2).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/idle/Centipede_idle (3).png").convert_alpha(),
+    ]
+    m_sneer = [
+        pygame.image.load("images/1 Centipede/sneer/Centipede_sneer.png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/sneer/Centipede_sneer (1).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/sneer/Centipede_sneer (2).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/sneer/Centipede_sneer (3).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/sneer/Centipede_sneer (4).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/sneer/Centipede_sneer (5).png").convert_alpha(),
+    ]
+    m_walk = [
+        pygame.image.load("images/1 Centipede/walk/Centipede_walk.png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/walk/Centipede_walk (1).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/walk/Centipede_walk (2).png").convert_alpha(),
+        pygame.image.load("images/1 Centipede/walk/Centipede_walk (3).png").convert_alpha(),
+    ]
     monster_x = 584
     monster_y = 700
+    monster_health = 4
 
     bg_x = 0
 
@@ -148,11 +204,10 @@ def level_1():
     while running:
 
         screen.blit(bg, (-10, 0))
-        screen.blit(monster, (monster_x, monster_y))
 
         if gameplay:
             player_rect = walk_left[0].get_rect(topleft=(player_x, player_y))
-            monster_rect = monster.get_rect(topleft=(monster_x, monster_y))
+            monster_rect = m_walk[0].get_rect(topleft=(monster_x, monster_y))
 
             if player_rect.colliderect(monster_rect):
                 gameplay = False
@@ -162,6 +217,7 @@ def level_1():
                 keys[pygame.K_a], keys[pygame.K_d], keys[pygame.K_LEFT], keys[pygame.K_RIGHT], keys[pygame.K_SPACE],
                 pygame.mouse.get_pressed()
             ]
+            screen.blit(m_walk[player_anim_count % 4], (monster_x, monster_y))
             if not is_jump:
                 if not (keys[pygame.K_a] or keys[pygame.K_d] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]):
                     screen.blit(idle[player_anim_count % 4], (player_x, player_y))
@@ -189,6 +245,9 @@ def level_1():
                 else:
                     is_jump = False
                     jump_count = 3
+            if monster_x <= player_x + 50:
+                if monster_health == 4:
+                    screen.blit(m_attack1[player_anim_count % 4], (monster_x, monster_y))
 
             if keys[pygame.K_LEFT] or keys[pygame.K_a] and player_x > 20:
                 player_x -= player_speed
@@ -196,6 +255,7 @@ def level_1():
                 player_x += player_speed
 
         else:
+            from loose_screen import loose_screen
             bg_sound.stop()
             gameplay, player_x, player_y, monster_x = loose_screen(True)
 
@@ -207,6 +267,7 @@ def level_1():
                 pygame.quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    from pause_screen import pause_screen
                     bg_sound.stop()
                     pause_screen(True)
 
