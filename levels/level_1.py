@@ -94,7 +94,6 @@ def level_1():
         pygame.image.load("images/woodcutter/woodcutter_attack1/Woodcutter_attack1 (2).png").convert_alpha(),
         pygame.image.load("images/woodcutter/woodcutter_attack1/Woodcutter_attack1 (3).png").convert_alpha(),
         pygame.image.load("images/woodcutter/woodcutter_attack1/Woodcutter_attack1 (4).png").convert_alpha()
-
     ]
     attack2 = [
         pygame.image.load("images/woodcutter/woodcutter_attack2/Woodcutter_attack2.png").convert_alpha(),
@@ -183,7 +182,7 @@ def level_1():
         pygame.image.load("images/1 Centipede/walk/Centipede_walk (3).png").convert_alpha(),
     ]
     monster_x = 584
-    monster_y = 700
+    monster_y = 660
     monster_health = 4
 
     bg_x = 0
@@ -200,17 +199,17 @@ def level_1():
     running = True
     gameplay = True
     motion = False
-
+    player_lost = False
     while running:
 
         screen.blit(bg, (-10, 0))
 
         if gameplay:
             player_rect = walk_left[0].get_rect(topleft=(player_x, player_y))
-            monster_rect = m_walk[0].get_rect(topleft=(monster_x, monster_y))
-
+            monster_rect = m_walk[0].get_rect(topleft=(monster_x + 10, monster_y))
             if player_rect.colliderect(monster_rect):
                 gameplay = False
+                player_lost = True
 
             keys = pygame.key.get_pressed()
             motion_buttons = [
@@ -218,8 +217,17 @@ def level_1():
                 pygame.mouse.get_pressed()
             ]
             screen.blit(m_walk[player_anim_count % 4], (monster_x, monster_y))
+            if monster_health <= 0:
+                screen.blit(m_death[player_anim_count % 4], (monster_x, monster_y))
+                if player_anim_count % 4 == 0 and player_anim_count != 0:
+                    screen.blit(m_death[3], (monster_x, monster_y))
+                    gameplay = False
+            else:
+                monster_x -= 6
+
             if not is_jump:
-                if not (keys[pygame.K_a] or keys[pygame.K_d] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]):
+                if not (keys[pygame.K_a] or keys[pygame.K_d] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or
+                keys[pygame.K_1] or keys[pygame.K_2] or keys[pygame.K_3]):
                     screen.blit(idle[player_anim_count % 4], (player_x, player_y))
                 else:
                     if keys[pygame.K_a] or keys[pygame.K_LEFT]:
@@ -228,8 +236,17 @@ def level_1():
                     elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
                         screen.blit(walk_right[player_anim_count % 6], (player_x, player_y))
                         bg_x -= 2
+                    elif keys[pygame.K_1]:
+                        screen.blit(attack1[player_anim_count % 6], (player_x, player_y))
+                    elif keys[pygame.K_2]:
+                        screen.blit(attack2[player_anim_count % 6], (player_x, player_y))
+                    elif keys[pygame.K_3]:
+                        screen.blit(attack3[player_anim_count % 6], (player_x, player_y))
                 if keys[pygame.K_SPACE]:
                     is_jump = True
+                for i in range(4, 1):
+                    if keys[exec(f"pygame.K_{i}")]:
+                        screen.blit(exec(f"attack{i}")[player_anim_count % 6], (player_x, player_y))
             else:
                 if jump_count >= -3:
                     if jump_count > 0:
@@ -248,30 +265,43 @@ def level_1():
             if monster_x <= player_x + 50:
                 if monster_health == 4:
                     screen.blit(m_attack1[player_anim_count % 4], (monster_x, monster_y))
-
             if keys[pygame.K_LEFT] or keys[pygame.K_a] and player_x > 20:
                 player_x -= player_speed
             elif keys[pygame.K_RIGHT] or keys[pygame.K_d] and player_x < 1500:
                 player_x += player_speed
 
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    pygame.quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        from pause_screen import pause_screen
+                        bg_sound.stop()
+                        pause_screen(True)
+                    if event.key == pygame.K_1:
+                        if monster_x - player_x <= 90:
+                            monster_health -= 1
+                            screen.blit(m_hurt[player_anim_count % 2], (monster_x, monster_y))
+                    if event.key == pygame.K_2:
+                        if monster_x - player_x <= 90:
+                            monster_health -= 2
+                            screen.blit(m_hurt[player_anim_count % 2], (monster_x, monster_y))
+                    if event.key == pygame.K_3:
+                        if monster_x - player_x <= 90:
+                            monster_health -= 3
+                            screen.blit(m_hurt[player_anim_count % 2], (monster_x, monster_y))
+
         else:
             from loose_screen import loose_screen
+            from win_screen import win_screen
             bg_sound.stop()
-            gameplay, player_x, player_y, monster_x = loose_screen(True)
-
+            if player_lost:
+                gameplay, player_x, player_y, monster_x = loose_screen(True)
+            else:
+                win_screen("level_2")
         pygame.display.update()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    from pause_screen import pause_screen
-                    bg_sound.stop()
-                    pause_screen(True)
-
-        monster_x -= 8
         player_anim_count += 1
         clock.tick(15)
 
